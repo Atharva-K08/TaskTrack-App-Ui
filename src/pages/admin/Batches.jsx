@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { createBatchThunk } from "../../features/batches/batchSlice";
+import {
+  createBatchThunk,
+  fetchBatchThunk,
+} from "../../features/batches/batchSlice";
+import { useSelector } from "react-redux";
 
 function Batches() {
   return (
     <div>
       <CourseForm />
+      <BatchTable />
     </div>
   );
 }
@@ -32,6 +37,7 @@ const CourseForm = () => {
     console.log("Form Data Submitted:", formData);
     dispatch(createBatchThunk(formData));
     reset();
+    dispatch(fetchBatchThunk());
   };
 
   const reset = () => {
@@ -105,6 +111,71 @@ const CourseForm = () => {
           </form>
         </div>
       </div>
+    </div>
+  );
+};
+
+const BatchTable = () => {
+  // Pulling data from the Redux store
+  const { batches, loading } = useSelector((state) => state.batch);
+  console.log("==============");
+  console.log("BatchTable Rendered with batches:", batches);
+  console.log("==============");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchBatchThunk());
+  }, []);
+
+  if (loading && batches.length === 0 && !batches) {
+    return <p className="p-4 text-blue-500">Loading batch data...</p>;
+  }
+
+  return (
+    <div className="table-responsive p-4">
+      <table className="table table-hover border">
+        <thead className="table-light">
+          <tr>
+            <th scope="col">Batch Name</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {batches.length === 0 ? (
+            <tr>
+              <td
+                colSpan="4"
+                className="text-center text-muted fst-italic py-4"
+              >
+                No batches found.
+              </td>
+            </tr>
+          ) : (
+            batches.map((batch) => (
+              <tr key={batch._id}>
+                <td className="fw-bold">{batch.name}</td>
+                <td>{new Date(batch.startDate).toLocaleDateString()}</td>
+                <td>{new Date(batch.endDate).toLocaleDateString()}</td>
+                <td>
+                  <span
+                    className={`badge rounded-pill ${
+                      batch.status === "Active"
+                        ? "bg-success"
+                        : batch.status === "Pending"
+                          ? "bg-warning text-dark"
+                          : "bg-secondary"
+                    }`}
+                  >
+                    {batch.status}
+                  </span>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };

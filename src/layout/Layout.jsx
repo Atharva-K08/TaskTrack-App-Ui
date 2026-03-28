@@ -19,22 +19,22 @@ function Layout({ children }) {
         <div className="col-2 bg-primary-subtle">
           <div className="row">
             <div className="col-12">
-              <div className="card p-2 m-2" role="button" onClick={() => clickHandler("/")}>
+              <div className="card p-2 m-2 shadow bg-primary text-white" role="button" onClick={() => clickHandler("/")}>
                 Dashboard
               </div>
             </div>
             <div className="col-12">
-              <div className="card p-2 m-2" role="button" onClick={() => clickHandler("/students")}>
+              <div className="card p-2 m-2 shadow bg-primary text-white" role="button" onClick={() => clickHandler("/students")}>
                 Students
               </div>
             </div>
             <div className="col-12">
-              <div className="card p-2 m-2" role="button" onClick={() => clickHandler("/teachers")}>
+              <div className="card p-2 m-2 shadow bg-primary text-white" role="button" onClick={() => clickHandler("/teachers")}>
                 Teachers
               </div>
             </div>
             <div className="col-12">
-              <div className="card p-2 m-2" role="button" onClick={() => clickHandler("/batches")}>
+              <div className="card p-2 m-2 shadow bg-primary text-white" role="button" onClick={() => clickHandler("/batches")}>
                 Batches
               </div>
             </div>
