@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginApi } from "./userApi";
+import { createUsersApi, getUsersApi, loginApi } from "./userApi";
 
 const loginThunk = createAsyncThunk("user/login", async (payload) => {
   try {
@@ -10,8 +10,25 @@ const loginThunk = createAsyncThunk("user/login", async (payload) => {
     alert(err);
   }
 });
+const fetchUsersThunk = createAsyncThunk("user/fetchUsers", async (role) => {
+  try {
+    const response = await getUsersApi(role);
+    return response.data;
+  } catch (err) {
+    alert(err);
+  }
+});
+const createUsersThunk = createAsyncThunk("user/createUsers", async (userData) => {
+  try {
+    const response = await createUsersApi(userData);
+    return response.data;
+  } catch (err) {
+    alert(err);
+  }
+});
 
 const initialState = {
+  users: [],
   user: null,
   token: null,
   loading: false,
@@ -36,9 +53,35 @@ const userSlice = createSlice({
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(fetchUsersThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        console.log("hello")
+      })
+      .addCase(fetchUsersThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchUsersThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(createUsersThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createUsersThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = [...state.users, action.payload];
+      })
+      .addCase(createUsersThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
-export { loginThunk };
+
+export { loginThunk, fetchUsersThunk, createUsersThunk };
 export default userSlice.reducer;

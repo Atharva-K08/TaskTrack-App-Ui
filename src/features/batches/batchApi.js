@@ -18,3 +18,22 @@ export const fetchBatchApi = async () => {
   }
 };
 
+// UPDATE
+export const updateBatchApi = async (id, payload) => {
+  try {
+    const response = await api.put(`/batches/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// DELETE
+export const deleteBatchApi = async (id) => {
+  try {
+    const response = await api.delete(`/batches/${id}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

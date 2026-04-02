@@ -8,3 +8,19 @@ export const loginApi = async (payload) => {
     return error.response.data;
   }
 };
+export const getUsersApi = async (role) => {
+  try {
+    const response = await api.get("/users?role="+role);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+export const createUsersApi = async (userData) => {
+  try {
+    const response = await api.post("/users/register", userData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
