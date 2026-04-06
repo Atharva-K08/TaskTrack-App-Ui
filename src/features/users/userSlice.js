@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUsersApi, getUsersApi, loginApi } from "./userApi";
+import {
+  createUsersApi,
+  getAllUsersApi,
+  getUsersApi,
+  loginApi,
+} from "./userApi";
 
 const loginThunk = createAsyncThunk("user/login", async (payload) => {
   try {
@@ -18,14 +23,28 @@ const fetchUsersThunk = createAsyncThunk("user/fetchUsers", async (role) => {
     alert(err);
   }
 });
-const createUsersThunk = createAsyncThunk("user/createUsers", async (userData) => {
-  try {
-    const response = await createUsersApi(userData);
-    return response.data;
-  } catch (err) {
-    alert(err);
-  }
-});
+const fetchUsersListThunk = createAsyncThunk(
+  "user/fetchUsersList",
+  async () => {
+    try {
+      const response = await getAllUsersApi();
+      return response.data;
+    } catch (err) {
+      alert(err);
+    }
+  },
+);
+const createUsersThunk = createAsyncThunk(
+  "user/createUsers",
+  async (userData) => {
+    try {
+      const response = await createUsersApi(userData);
+      return response.data;
+    } catch (err) {
+      alert(err);
+    }
+  },
+);
 
 const initialState = {
   users: [],
@@ -57,7 +76,7 @@ const userSlice = createSlice({
       .addCase(fetchUsersThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
-        console.log("hello")
+        console.log("hello");
       })
       .addCase(fetchUsersThunk.fulfilled, (state, action) => {
         state.loading = false;
@@ -78,10 +97,21 @@ const userSlice = createSlice({
       .addCase(createUsersThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(fetchUsersListThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsersListThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchUsersListThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
-
-export { loginThunk, fetchUsersThunk, createUsersThunk };
+export { loginThunk, fetchUsersThunk, createUsersThunk, fetchUsersListThunk };
 export default userSlice.reducer;

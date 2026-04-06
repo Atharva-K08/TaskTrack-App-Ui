@@ -16,6 +16,14 @@ export const getUsersApi = async (role) => {
     return error.response.data;
   }
 };
+export const getAllUsersApi = async () => {
+  try {
+    const response = await api.get("/users/list");
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 export const createUsersApi = async (userData) => {
   try {
     const response = await api.post("/users/register", userData);
